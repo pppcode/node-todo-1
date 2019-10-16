@@ -65,15 +65,71 @@
 
 1. 创建 index.js，实现其所有功能，先测试
    ```
-   module.exports.add = () => {
+   module.exports.add = (title) => {
      console.log('add')
    }
    ```
 2. cli.js 中引入
    ```
-   
+   const api = require('./index.js')
+   ...
+   program
+     .command('add')
+     .description('add a task')
+     .action((...args) => {
+       const words = args.slice(0,-1).join(' ')
+       api.add(words)
+     });
    ```
-
+   运行 `node cli add`, 输出 `add`，表示测试成功
+   tips：点击 Run > Edit Configurations,添加 node.js,配置 javascript file: cli.js ,application parameters: add,配置完成后，直接 run 就可快速执行了
+   
+3. 实现 add 函数：
+   把输入的任务名添加到数据库中(home 目录中),
+   ```
+   const homedir = require('os').homedir();
+   const home = process.env.HOME || homedir //优先获取用户设置的 home
+   
+   module.exports.add = (title) => {
+     console.log(home)
+   }
+   ```
+   在 home 目录中创建文件夹来存贮任务名
+   ```
+   const homedir = require('os').homedir();
+   const home = process.env.HOME || homedir //优先获取用户设置的 home
+   const p = require('path')
+   const fs = require('fs')
+   const dbPath = p.join(home, '.todo')
+   
+   module.exports.add = (title) => {
+     //读取之前的任务，如果没有就添加
+     fs.readFile(dbPath, {flag: 'a+'}, (error, data)=> {
+       if(error) {
+         console.log(error)
+       }else {
+         let list
+         try {
+           list = JSON.parse(data.toString())
+         }catch (error2) {
+           list = []
+         }
+         // console.log(list)
+         const task = {
+           title: title,
+           done: false
+         }
+         list.push(task)
+         const string = JSON.stringify(list)
+         fs.writeFile(dbPath, string, (error3) => {
+           if(error3) {
+             console.log(errors)
+           }
+         })
+       }
+     })
+   }
+   ```
 
 
 
