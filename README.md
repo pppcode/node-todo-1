@@ -432,6 +432,40 @@ module.exports.showAll = async () => {
   printTasks(list)
 }
 ```
+## 发布到 npm
+
+配置 package.json
+```
+{
+  "name": "node-todos",
+  "bin": {
+    "t": "cli.js"
+  },
+  "file": [
+    "*.js"
+  ],
+  "version": "0.0.1",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^3.0.2",
+    "inquirer": "^7.0.0"
+  }
+}
+```
+运行 `chmod +x cli.js`,把 cli.js 变成 t 命令
+
+发布前，记得把淘宝源切换成原始源
+
+发布：
+1. npm adduser
+2. npm publish
+
+用户使用：
+1. yarn global add node-todos
+2. t
+
+
 
 
 
