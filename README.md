@@ -180,4 +180,70 @@
    ```
    测试，输入`node cli.js add 买水`，`cat ~/.todo`,输出`[{"title":"买水","done":false}]`
 
+## 实现 clear 功能
+
+cli.js 
+```
+program
+  .command('clear')
+  .description('add all tasks')
+  .action(() => {
+    api.clear()
+  });
+```
+index.js
+```
+module.exports.clear = async (title) => {
+  await db.write([])
+}
+```
+测试，输入`node cli.js clear`,`cat ~/.todo`,输出`[]`
+
+## 列出所有的 todo
+
+当用户输入`node cli.js`时，展示出所有的 todo，那么如何知道用户输入了几个参数呢？
+
+通过`process.argv`,cli.js中`console.log(process.argv)`，输入`node cli.js xxx`
+
+输出了3个参数
+```
+[ '/usr/local/bin/node',
+  '/Users/a/projects/node-todo-1/cli.js',
+  'xxx' ]
+```
+所以,cli.js
+```
+if(process.argv.length ===2) {
+  //说明用户直接运行 node cli.js
+  api.showAll()
+}
+```
+index.js
+```
+module.exports.showAll = async () => {
+  console.log('show all')
+}
+```
+测试，输入`node cli.js`时，输出`show all`
+
+**实现 showAll**
+
+index.js
+```
+module.exports.showAll = async () => {
+  //读取之前的任务
+  const list = await db.read()
+  //打印之前的任务
+  list.forEach((task,index) => {
+    console.log(`${task.done ? '[x]' : '[_]'} ${index + 1} - ${task.title}`)
+  })
+}
+```
+测试，输入`node cli.js`,输出`[_] 1 - 买水 [_] 2 - 买泡面`，接下来实现，让用户可以操作任务
+
+## 标记 todo 为已完成/未完成
+
+
+
+
 
