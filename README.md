@@ -465,6 +465,20 @@ module.exports.showAll = async () => {
 1. yarn global add node-todos
 2. t
 
+**版本升级: 增加查看版本的功能**
+
+cli.js
+```
+const pkg = require('./package.json')
+program
+  .version(pkg.version)
+```
+测试，输入`node cli.js --version`,输出`0.0.1`
+
+重新发布，直接`npm publish`
+
+用户使用时，更新包`yarn global add node-todos@0.0.2`,运行`t --version`,输出`0.0.2`
+
 
 
 
